@@ -23,7 +23,7 @@ const HeroSection: React.FC = () => {
           {/* Main Headlines */}
           <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
             Análise Política
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-political-gold via-white to-political-gold">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-green-500 to-blue-400 dark:from-yellow-300 dark:via-green-600 dark:to-yellow-400">
               Independente
             </span>
           </h1>

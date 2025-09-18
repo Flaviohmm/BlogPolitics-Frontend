@@ -52,7 +52,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <Card
-      className={`group hover:shadow-lg transition-all duration-300 overflow-hidden ${
+      className={`group shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
         featured ? "border-primary" : ""
       }`}
     >
