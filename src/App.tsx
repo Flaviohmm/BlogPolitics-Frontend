@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import PostEditor from "./pages/admin/PostEditor";
 import Analytics from "./pages/admin/Analytics";
+import ProtectedRoute from "./pages/admin/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -21,9 +23,31 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/post-editor" element={<PostEditor />} />
-            <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/post-editor"
+              element={
+                <ProtectedRoute>
+                  <PostEditor />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
