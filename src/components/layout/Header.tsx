@@ -21,7 +21,7 @@ const Header: React.FC = () => {
             to="/"
             className="text-2xl font-bold text-primary hover:text-primary-hover transition-colors"
           >
-            Política <span className="bg-gradient-to-r from-yellow-500 via-green-500 to-blue-500 inline-block text-transparent bg-clip-text">BR</span>
+            <span className="bg-gradient-to-r from-yellow-500 via-green-500 to-blue-500 inline-block text-transparent bg-clip-text">PolíticaBR</span>
           </Link>
 
           {/* Desktop Navigation */}
