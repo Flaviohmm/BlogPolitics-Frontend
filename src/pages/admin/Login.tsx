@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Lock, User } from "lucide-react";
+import { Loader2, Lock, User, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Login: React.FC = () => {
@@ -23,39 +23,63 @@ const Login: React.FC = () => {
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
-    const token = localStorage.getItem("adminToken");
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      // Aqui você fará a chamada para seu backend Java
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Chamada para o backend Java
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password: password,
+          }),
+        }
+      );
+
+      const data = await response.json();
 
       if (response.ok) {
-        const data = await response.json();
+        // Verificar se o usuário tem permissão de admin
+        if (data.user.role !== "ADMIN" && data.user.role !== "AUTHOR") {
+          setError(
+            "Você não tem permissão para acessar o painel administrativo."
+          );
+          return;
+        }
 
-        // Armazenar token de autenticação
+        // Armazenar dados de autenticação
         localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("adminUser", JSON.stringify(data.user));
+        localStorage.setItem("tokenExpiry", data.expiresAt);
 
         toast({
           title: "Login realizado com sucesso!",
-          description: "Redirecionando para o dashboard...",
+          description: `Bem-vindo, ${data.user.firstName}`,
         });
 
         // Redirecionar para dashboard
-        navigate("/admin/dashboard");
+        setTimeout(() => {
+          navigate("/admin/dashboard");
+        }, 500);
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Credenciais inválidas");
+        // Tratar diferentes tipos de erro
+        if (response.status === 401) {
+          setError("Email ou senha incorretos.");
+        } else if (response.status === 403) {
+          setError("Sua conta está desativada. Entre em contato com o administrador.");
+        } else if (response.status === 429) {
+          setError("Muitas tentativas de login. Tente novamente mais tarde.");
+        } else {
+          setError(data.message || "Erro ao realizar login. Tente novamente.");
+        }
       }
     } catch (error) {
       console.error("Erro no login:", error);
@@ -83,9 +107,10 @@ const Login: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-5">
               {error && (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className="animate-in fade-in-0">
+                  <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -97,12 +122,14 @@ const Login: React.FC = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@exemplo.com"
+                    placeholder="email@exemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
                     required
                     disabled={isLoading}
+                    autoComplete="email"
+                    autoFocus
                   />
                 </div>
               </div>
@@ -120,6 +147,7 @@ const Login: React.FC = () => {
                     className="pl-10"
                     required
                     disabled={isLoading}
+                    autoComplete="current-password"
                   />
                 </div>
               </div>
@@ -142,7 +170,10 @@ const Login: React.FC = () => {
 
             <div className="mt-6 text-center">
               <p className="text-xs text-muted-foreground">
-                Acesso restrito a administradores
+                Acesso restrito a administradores e autores autorizados
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Protegido por autenticação JWT
               </p>
             </div>
           </CardContent>
