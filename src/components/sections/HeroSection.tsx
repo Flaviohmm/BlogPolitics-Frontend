@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-gradient-to-br from-primary to-primary-hover text-primary-foreground overflow-hidden">
+    <section className="relative bg-gradient-to-br from-yellow-600 via-green-600 to-blue-600 dark:from-yellow-300 dark:via-green-300 dark:to-blue-300 text-primary-foreground overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
@@ -23,7 +23,7 @@ const HeroSection: React.FC = () => {
           {/* Main Headlines */}
           <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
             Análise Política
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-green-500 to-blue-400 dark:from-yellow-300 dark:via-green-600 dark:to-yellow-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-sky-400 to-cyan-500 dark:from-blue-600 dark:via-sky-500 dark:to-cyan-600">
               Independente
             </span>
           </h1>
