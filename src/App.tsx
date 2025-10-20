@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import Blog from "./pages/Blog";
+import PostDetail from "./pages/PostDetail";
 import TagPage from "./pages/TagPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/admin/Login";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/admin/login" element={<Login />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/post/:id" element={<PostDetail />} />
             <Route path="/tag/:slug" element={<TagPage />} />
             <Route
               path="/admin/dashboard"
